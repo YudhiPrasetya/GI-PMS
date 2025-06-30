@@ -1,0 +1,481 @@
+<style>
+ .select-info {
+  margin-left: 10px;
+ }
+
+ .swal-wide {
+  font-size: .85rem;
+ }
+
+ .sweet_loader {
+  width: 140px;
+  height: 140px;
+  margin: 0 auto;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-name: ro;
+  transform-origin: 50% 50%;
+  transform: rotate(0) translate(0, 0);
+ }
+
+ @keyframes ro {
+  100% {
+   transform: rotate(-360deg) translate(0, 0);
+  }
+ }
+</style>
+
+<div class="page-wrapper">
+ <div class="page-content">
+  <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
+   <div class="breadcrumb-title pe-3">Packing</div>
+   <div class="ps-3">
+    <nav aria-label="breadcrumb">
+     <ol class="breadcrumb mb-0 p-0">
+      <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">Solid Packing Box Capacity</li>
+     </ol>
+    </nav>
+   </div>
+  </div>
+  <h6 class="mb-0 text-uppercase">Solid Packing Box Capacity</h6>
+  <hr />
+  <div class="row">
+   <div class="col-8">
+    <div class="card">
+
+     <div class="card-body">
+      <div class="mx-3 my-3">
+
+       <div class='form-group row mb-3'>
+        <div class='col-md-6'>
+         <button id='btnAddNew' class='btn btn-primary'><i class='bx bx-plus-circle'></i> Add New Capacities</button>
+        </div>
+       </div>
+
+       <!-- <div class="table-responsive"> -->
+       <table id="capacityTable" class="table table-striped table-bordered table-sm nowrap" style="width:100%">
+        <thead>
+         <th>No.</th>
+         <th>Style</th>
+         <th>Action</th>
+        </thead>
+       </table>
+       <!-- </div> -->
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+<!-- Modal Details -->
+<div class="modal fade" id="modalDetail" aria-hidden="true">
+ <div class="modal-dialog modal-lg">
+  <div class="modal-content">
+   <div class="modal-header">
+    <h5 class="modal-title">Size Box Capacity</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   </div>
+   <div class="modal-body">
+    <div class="row mx-3 my-3">
+     <div class="col-md-12">
+
+      <table id="showSizeCapacity" class="table table-striped">
+       <thead>
+        <tr>
+         <th>Style</th>
+         <th>Size</th>
+         <th>Capacity (box)</th>
+        </tr>
+       </thead>
+      </table>
+     </div>
+    </div>
+   </div>
+   <!-- <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div> -->
+  </div>
+ </div>
+</div>
+
+<!-- Modal Add -->
+<div class="modal fade" id="modal_add_kapasitas_box" aria-hidden="true">
+ <div class="modal-dialog modal-lg">
+  <div class="modal-content">
+   <div class="modal-header">
+    <h5 class="modal-title">Add New Capacity</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+   </div>
+   <div class="modal-body" id="modal_add_kapasitas_box_body">
+    <div class="row mx-3 my-3">
+     <div class="col-md-12">
+      <div class="row g-3 align-items-center mb-3">
+       <div class="col-lg-2">
+        <label for="style" class="col-form-label">Style</label>
+       </div>
+       <div class="col-lg-5">
+        <select class="single_select" id="style"></select>
+       </div>
+      </div>
+      <div class="row g-3 align-items-center mb-3">
+       <div class="col-lg-2">
+        <label for="size" class="col-form-label">Size</label>
+       </div>
+       <div class="col-lg-2">
+        <input type="text" id="size" class="form-control">
+       </div>
+      </div>
+      <div class="row g-3 align-items-center mb-3">
+       <div class="col-lg-2">
+        <label for="box_capacity" class="col-form-label">Box Capacity</label>
+       </div>
+       <div class="col-lg-2">
+        <input type="number" id="box_capacity" class="form-control">
+       </div>
+      </div>
+      <div class="row mb-3">
+       <div class="col-lg-12 text-center">
+        <button id='btnOK' class="btn btn-gradient-secondary px-5" disabled>OK</button>
+       </div>
+      </div>
+      <hr>
+      <table id="packingDetailTable" class="table table-striped" style="width: 100%;">
+       <thead>
+        <tr>
+         <th class="text-center">Style</th>
+         <th class="text-center">Size</th>
+         <th class="text-center">Box Capacity</th>
+         <th class="text-center">Action</th>
+        </tr>
+       </thead>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="modal-footer">
+    <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+    <button type="button" class="btn btn-primary" id="btnSave" disabled><i class="fadeIn animated bx bx-upload"></i> Save</button>
+   </div>
+  </div>
+ </div>
+</div>
+
+
+
+
+<script>
+ $('.single_select').select2({
+  theme: 'bootstrap-5',
+  width: $(this).data('width') ? $(this).data('width') : $(this).hasClass('w-100') ? '100%' : 'style',
+  dropdownParent: $('#modal_add_kapasitas_box_body')
+ });
+</script>
+
+
+<script>
+ $(document).ready(function() {
+  var mode = "";
+  const loadStyle = () => {
+   $('#style').empty();
+   $.ajax({
+    url: " <?= site_url('packing/ajax_get_styles'); ?>",
+    type: 'GET',
+    dataType: 'JSON',
+    beforeSend: function() {
+     $("#style").prepend($('<option></option>').html('Loading...'));
+    },
+   }).done(function(data) {
+    $('#style').empty();
+    $('#style').append($('<option>', {
+     value: "",
+     text: "- Select Style -"
+    }));
+    $.each(data, function(i, item) {
+     $('#style').append($('<option>', {
+      value: item.style,
+      text: item.style
+     }));
+    });
+   });
+  }
+
+  loadStyle();
+
+  let capacityTable = $('#capacityTable').DataTable({
+   // dom: '<"toolbar">lfrtip',
+   // ordering: false,
+   autoWidth: true,
+   processing: true,
+   destroy: true,
+   info: true,
+   searching: true,
+   // paging: true,
+   fixedHeader: true,
+
+   ajax: {
+    url: '<?= site_url('packing/ajax_get_kapasitas_karton_by_style_distinct'); ?>',
+    type: 'GET',
+    dataType: 'JSON'
+
+   },
+   language: {
+    processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><br><div><p>Silahkan Menunggu...</p></div> ',
+    emptyTable: 'Tidak ada data',
+    lengthMenu: '_MENU_',
+   },
+   columns: [{
+     "data": null,
+     "className": "text-center align-middle",
+     "orderable": true,
+     "searchable": false,
+     // "width": "100px",
+     "render": function(data, type, row, meta) {
+      return meta.row + meta.settings._iDisplayStart + 1;
+     }
+    },
+    {
+     'data': 'style',
+     'className': "text-center px-2 align-middle"
+    },
+    {
+     'className': 'text-center px-3 align-middle',
+     render: function(data, type, row) {
+      return "<button class='btn btn-sm btn-outline-primary shadow btnDetail' id='btnDetail'><i class='lni lni-pointer-right'></i>Detail</button> <button class='btn btn-sm btn-outline-warning shadow btnEdit' id='btnEdit'><i class='lni lni-pencil-alt'></i> Edit</button>"
+     },
+    },
+    // {
+    //     'className': 'text-center px-3 text-nowrap',
+    //     render: function(data, type, row) {
+    //         return "<button class='btn btn-sm btn-outline-success shadow btnAdd' id='btnAdd'><i class='lni lni-circle-plus'></i>Add</button>"
+    //     },
+    // },
+    // {
+    //     'className': 'text-center px-3 text-nowrap',
+    //     render: function(data, type, row) {
+    //         return "<button class='btn btn-sm btn-outline-warning shadow btnEdit' id='btnEdit'><i class='lni lni-pencil-alt'></i> Edit</button>"
+    //     },
+    // }
+
+   ],
+   // lengthMenu: [
+   //     [10, 25, 50, 100, -1],
+   //     [10, 25, 50, 100, 'All'],
+   // ],
+  });
+
+  // var toolbar = "<div class='form-group row mb-3'>" +
+  //     "<div class='col-md-6'>" +
+  //     "<button id='btnAddNew' class='btn btn-primary btn-sm'><i class='lni lni-circle-plus'></i>Add New Capacities</button>" +
+  //     "</div>" +
+  //     "</div>";
+  // $("div.toolbar").html(toolbar);
+
+  $('#btnAddNew').click(function() {
+   mode = "Add New";
+   // $('#style').select2('val', '');
+   // $('#style').focus();
+
+   $('#modal_add_kapasitas_box').modal('show');
+  });
+
+
+
+  var style;
+
+  $("#capacityTable tbody").on("click", "#btnDetail", function() {
+   style = capacityTable.row($(this).parents('tr')).data().style;
+
+
+   var showSizeCapacity = $('#showSizeCapacity').DataTable({
+
+    autoWidth: false,
+    // processing: true,
+    // serverSide: true,
+    destroy: true,
+    info: false,
+    searching: false,
+    paging: false,
+    fixedHeader: true,
+
+    ajax: {
+     url: '<?= site_url('packing/get_detail_capacity'); ?>',
+     type: 'POST',
+     data: {
+      style: style,
+     },
+
+    },
+    // language: {
+    //     processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i><br><div><p>Silahkan Menunggu...</p></div> ',
+    //     emptyTable: 'Tidak ada data',
+    //     lengthMenu: '_MENU_',
+    // },
+    columns: [{
+      'data': 'style',
+      'className': "text-center"
+     },
+     {
+      'data': 'size',
+      'className': "text-center"
+     },
+     {
+      'data': 'kapasitas_karton',
+      'className': "text-center"
+     },
+    ],
+    // lengthMenu: [
+    //     [10, 25, 50, 100, -1],
+    //     [10, 25, 50, 100, 'All'],
+    // ],
+   });
+
+   $("#modalDetail").modal('show');
+  });
+
+  var tableDetail = $('#packingDetailTable').DataTable({
+   autoWidth: true,
+   info: false,
+   searching: false,
+   paging: false,
+   columns: [{
+     'className': "text-center"
+    },
+    {
+     'className': "text-center"
+    },
+    {
+     'className': "text-center"
+    },
+    {
+     'className': "text-center"
+    },
+   ],
+  });
+
+  $('#style').change(function() {
+   $('#btnOK').prop('disabled', false)
+  });
+
+
+  $('#btnOK').click(function() {
+   let style = $('#style').val();
+   let size = $('#size').val();
+   let box_capacity = $('#box_capacity').val();
+
+   if (style != "" && size != "" && box_capacity != "") {
+    tableDetail.row.add([
+     $('#style').val(),
+     $('#size').val(),
+     $('#box_capacity').val(),
+     '<span class="badge text-bg-danger" style="cursor: pointer;" id="btn_remove">Remove</span>'
+    ]).draw();
+    $('#box_capacity').val('')
+    $('#size').val('');
+    $('#size').trigger('focus');
+    $('#btnSave').prop('disabled', false);
+   } else {
+    swal.fire({
+     icon: 'warning',
+     title: 'Warning!',
+     text: 'Ada form yang belum diisi.',
+     // timer: 1000,
+     // showCancelButton: false,
+     // showConfirmButton: true
+    });
+   }
+  });
+
+  $('#packingDetailTable tbody').on('click', '#btn_remove', function() {
+   tableDetail.row($(this).parents('tr')).remove().draw();
+  });
+
+  $('#btnSave').click(function() {
+   // if (mode == "Add New") {
+   var dataTable = tableDetail.rows().data();
+
+   // console.log('dataTable: ', dataTable);
+
+   var arrDataTable = [];
+
+   $.each(dataTable, function(i, itm) {
+    arrDataTable.push({
+     'style': itm[0],
+     'size': itm[1],
+     'kapasitas_karton': itm[2]
+    });
+   });
+
+   // console.log('arrDataTable: ', arrDataTable);
+
+   $.ajax({
+    type: 'POST',
+    url: '<?php echo site_url("packing/ajax_save_kapasitas_karton"); ?>',
+    data: {
+     'kapasitasKarton': arrDataTable
+    },
+    dataType: 'json'
+   }).done(function(affRow) {
+    if (affRow > 0) {
+     swal.fire({
+      icon: 'success',
+      title: 'Simpan Data Berhasil',
+      html: '<h3 style="color: blue;"><strong>Simpan Data Kapasitas Box Berhasil.</strong></h3>',
+      showConfirmButton: false,
+      timer: 1500
+     }).then(function() {
+      tableDetail.clear().draw();
+      capacityTable.ajax.reload();
+      $('#modal_add_kapasitas_box').modal('hide');
+     })
+    }
+   });
+  });
+
+  // $('#capacityTable tbody').on('click', '#btnAdd', function() {
+  //     var data = capacityTable.row($(this).parents('tr')).data().style;
+
+  //     addBoxCapacity(data);
+  // });
+
+  // function addBoxCapacity(style) {
+  //     mode = "Add Style Size"
+  //     $('#style').select2('val', style);
+  //     $('#modal_add_kapasitas_box').modal('show');
+
+  // }
+  // var style;
+  $("#capacityTable tbody").on("click", "#btnEdit", function() {
+
+   var styleVal = capacityTable.row($(this).parents('tr')).data().style;
+   open('<?php echo site_url("packing/edit_kapasitas_karton/"); ?>' + styleVal, '_self');
+   // console.log(styleVal);
+
+   // $.ajax({
+   //     type: 'POST',
+   //     url: '< ?php echo site_url('packing/ajax_get_by_style'); ?>',
+   //     data: {
+   //         'styleVal': styleVal
+   //     },
+   //     dataType: 'json',
+   // }).done(function(dt) {
+   //     // console.log(dt);
+   //     if (dt != null) {
+   //         localStorage.removeItem('kapasitas_box');
+   //         localStorage.setItem('kapasitas_box', JSON.stringify(dt));
+
+   //     }
+   // })
+
+  });
+
+
+
+
+ })
+</script>
