@@ -1,2 +1,2 @@
 # Ignore system sessions
-system/sessions/*
+/system/sessions
