@@ -49,6 +49,7 @@ $html .= '<style>
 		</style>
 		<body>';
 $html .= 'ORC: <strong>' . $packingList[0]['orc'] . '</strong><br>';
+$html .= 'Work Order: <strong>' . $packingList[0]['wo'] . '</strong><br>';
 $html .= 'Color: <strong>' . $packingList[0]['color']  . '</strong><br>';
 $html .= 'Style: <strong>' . $packingList[0]['style']  . '</strong><br>';
 $html .= '<hr/>';

@@ -15,6 +15,8 @@
     <link href="<?= base_url(); ?>/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
 
     <!-- Datatable -->
+    <link href="<?= base_url(); ?>/assets/plugins/datatable/css/dataTables.dataTables.css" rel="stylesheet" />
+
     <link href="<?= base_url(); ?>/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
 
     <!-- loader-->
@@ -44,7 +46,7 @@
     <!-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> -->
 
     <!-- Select2 -->
-    <!-- <script src="<?= base_url(); ?>/assets/plugins/select2/js/select2.min.js"></script> -->
+    <!-- <script src="<//?= base_url(); ?>/assets/plugins/select2/js/select2.min.js"></script> -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> -->
 
 

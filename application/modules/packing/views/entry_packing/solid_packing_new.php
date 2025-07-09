@@ -12,7 +12,7 @@
                 </nav>
             </div>
         </div>
-        <h6 class="mb-0 text-uppercase">Boxes Packing Capacities</h6>
+        <h6 class="mb-0 text-uppercase">Input Solid Packing</h6>
         <hr />
         <div class="row">
             <div class="col-12 ">
@@ -119,6 +119,10 @@
                     'className': "text-center px-2 align-middle"
                 },
                 {
+                    "data": "wo",
+                    'className': "text-center px-2 align-middle"
+                },
+                {
                     "data": "color",
                     'className': "text-center px-2 align-middle"
                 },
@@ -155,7 +159,7 @@
         $("#packingListTable tbody").on("click", "#btnDetail", function() {
             var orc = packingListTable.row($(this).parents('tr')).data().orc;
             var style = packingListTable.row($(this).parents('tr')).data().style;
-
+            let wo = packingListTable.row($(this).parents('tr')).data().wo;
 
             var showSizeCapacity = $('#showSizeCapacity').DataTable({
 
@@ -173,7 +177,8 @@
                     type: 'POST',
                     data: {
                         style: style,
-                        orc: orc
+                        // orc: orc
+                        wo: wo
                     },
 
                 },
@@ -251,21 +256,26 @@
         });
 
         $("#packingListTable tbody").on("click", "#btnBarcode", function() {
-            var orc = packingListTable.row($(this).parents('tr')).data().orc;
-            window.open("<?php echo site_url("packing/ajax_barcode_print_preview"); ?>/" + orc, '_blank');
+            // var orc = packingListTable.row($(this).parents('tr')).data().orc;
+            let wo = packingListTable.row($(this).parents('tr')).data().wo;
+            // window.open("<//?php echo site_url("packing/ajax_barcode_print_preview"); ?>/" + orc, '_blank');
+            window.open("<?php echo site_url("packing/ajax_barcode_print_preview"); ?>/" + wo, '_blank');
 
         });
 
         $("#packingListTable tbody").on("click", "#btnPrintPackingList", function() {
             // console.log('ok');
-            var orc = packingListTable.row($(this).parents('tr')).data().orc;
-            window.open("<?php echo site_url("packing/ajax_packing_list_print_preview"); ?>/" + orc, '_blank');
+            // var orc = packingListTable.row($(this).parents('tr')).data().orc;
+            var wo = packingListTable.row($(this).parents('tr')).data().wo;
+            // window.open("<//?php echo site_url("packing/ajax_packing_list_print_preview"); ?>/" + orc, '_blank');
+            window.open("<?php echo site_url("packing/ajax_packing_list_print_preview"); ?>/" + wo, '_blank');
 
         });
 
         $("#packingListTable tbody").on("click", "#btnDeletePackingList", function() {
 
-            var orc = packingListTable.row($(this).parents('tr')).data().orc;
+            // var orc = packingListTable.row($(this).parents('tr')).data().orc;
+            var orc = packingListTable.row($(this).parents('tr')).data().wo;
             // console.log(orc);
             swal.fire({
                 icon: 'warning',
@@ -279,7 +289,7 @@
             }).then(function(result) {
                 if (result.value) {
                     $.ajax({
-                        url: '<?php echo site_url("Packing/ajax_delete_packing_list"); ?>/' + orc,
+                        url: '<?php echo site_url("Packing/ajax_delete_packing_list_by_wo"); ?>/' + orc,
                         type: 'POST',
 
                         success: function(data) {

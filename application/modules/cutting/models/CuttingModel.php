@@ -668,7 +668,8 @@ class CuttingModel extends CI_Model
 
   $rst = "SELECT
             work_order.work_order as orc,
-            work_order_details.size
+            work_order_details.size,
+            work_order_details.qty_size
           FROM
             work_order
             INNER JOIN work_order_details ON work_order.id = work_order_details.id_work_order

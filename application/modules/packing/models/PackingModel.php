@@ -186,22 +186,25 @@ class PackingModel extends CI_Model
 
     public function getDataMasterOrderPacking()
     {
-        $data = "SELECT
-                    id,
-                    created_date,
-                    orc,
-                    style,
-                    color,
-                    buyer,
-                    no_po,
-                    qty_order
-                FROM
-                    master_order_packing_main
-                ORDER BY
-                    id DESC
-              ";
+        // $data = "SELECT
+        //             id,
+        //             created_date,
+        //             orc,
+        //             style,
+        //             color,
+        //             buyer,
+        //             no_po,
+        //             qty_order
+        //         FROM
+        //             master_order_packing_main
+        //         WHERE 
+        //             id_factory = $this->id_factory
+        //         ORDER BY
+        //             id DESC
+        //       ";
+        $query = $this->db->get_where('master_order_packing_main', ['id_factory' => $this->id_factory]);
 
-        $query = $this->db->query($data);
+        // $query = $this->db->query($data);
         return $query->result();
     }
 
@@ -224,6 +227,11 @@ class PackingModel extends CI_Model
         return $query->result();
     }
 
+    public function getMasterOrderPackingDetailById($id){
+        $query = $this->db->get_where('master_order_packing_details', ['id_master_order_packing_main' => $id]);
+        return $query->result();
+    }
+
     public function postDataMasterOrderPackingMain($data_main)
     {
         $this->db->insert('master_order_packing_main', $data_main);
@@ -234,9 +242,13 @@ class PackingModel extends CI_Model
     {
         $this->db->insert_batch('master_order_packing_details', $data_details);
     }
+
+    public function getMasterOrderPackingdetails(){
+        $rst = $this->db->get('view_masterorderpacking');
+        return $rst->result();
+    }
+
     // ===================================================================================================
-
-
     public function get_count_cartons_all()
     {
         $this->db->select('count(carton_no) as count_cartons_all');
@@ -677,10 +689,16 @@ class PackingModel extends CI_Model
     public function get_solid_packing()
     {
         $this->db->distinct();
-        $this->db->select('solid_packing_list.orc, solid_packing_list.color, solid_packing_list.style');
+        $this->db->select(
+            'solid_packing_list.orc,
+             solid_packing_list.wo,
+             solid_packing_list.color,
+             solid_packing_list.style'
+        );
         $this->db->from('solid_packing_list');
-        $this->db->join('order', 'order.orc = solid_packing_list.orc');
-        $this->db->where('order.id_factory', $this->id_factory);
+        // $this->db->join('order', 'order.orc = solid_packing_list.orc');
+        // $this->db->where('order.id_factory', $this->id_factory);
+        $this->db->where('solid_packing_list.id_factory', $this->id_factory);
         $rst = $this->db->get();
 
         $data = array(
@@ -700,22 +718,23 @@ class PackingModel extends CI_Model
     //     return $rst->result();
     //     // }
     // }
-    public function get_solid_packing_detail($style, $orc)
+    public function get_solid_packing_detail($style, $wo)
     {
-        $data = "SELECT
-                    solid_packing_list.size,
-                    solid_packing_list.qty,
-                    solid_packing_list.box_capacity,
-                    solid_packing_list.total_box
-                FROM
-                    solid_packing_list 
-                    INNER JOIN `order` ON solid_packing_list.orc = `order`.orc
-                WHERE
-                    `order`.id_factory = $this->id_factory
-                    AND solid_packing_list.orc = '$orc'
-                    AND solid_packing_list.style = '$style'
-        ";
-        $query = $this->db->query($data);
+        // $data = "SELECT
+        //             solid_packing_list.size,
+        //             solid_packing_list.qty,
+        //             solid_packing_list.box_capacity,
+        //             solid_packing_list.total_box
+        //         FROM
+        //             solid_packing_list 
+        //             INNER JOIN `order` ON solid_packing_list.orc = `order`.orc
+        //         WHERE
+        //             `order`.id_factory = $this->id_factory
+        //             AND solid_packing_list.orc = '$orc'
+        //             AND solid_packing_list.style = '$style'
+        // ";
+        // $query = $this->db->query($data);
+        $query = $this->db->get_where('solid_packing_list', ['wo' => $wo, 'style' => $style]);
         return $query->result();
     }
 
@@ -725,9 +744,22 @@ class PackingModel extends CI_Model
         return $result->result();
     }
 
-    public function get_by_orc_list($orc)
+    public function get_by_wo($wo)
     {
-        $result = $this->db->get_where('solid_packing_list', array('orc' => $orc));
+        $result = $this->db->get_where('viewpackingbarcode', array('wo' => $wo));
+        return $result->result();
+    }
+
+    // public function get_by_orc_list($orc)
+    // {
+    //     $result = $this->db->get_where('solid_packing_list', array('orc' => $orc));
+
+    //     return $result->result_array();
+    // }
+
+    public function get_by_wo_list($wo)
+    {
+        $result = $this->db->get_where('solid_packing_list', array('wo' => $wo));
 
         return $result->result_array();
     }
@@ -764,6 +796,16 @@ class PackingModel extends CI_Model
 
         return $delete ? true : false;
     }
+
+    public function delete_by_wo($wo)
+    {
+        $this->db->where('wo', $wo);
+        $delete = $this->db->delete('solid_packing_list');
+
+        return $delete ? true : false;
+    }
+
+
     public function getDataOutputPacking()
     {
         $data = "SELECT
@@ -1347,13 +1389,17 @@ class PackingModel extends CI_Model
             //insert solid_packing_list
             foreach ($arrPackingList as $p) {
                 $data = [
+                    'id_master_order_icon_main' => $p['id_master_order_icon_main'],
                     'orc' => $p['orc'],
+                    'wo' => $p['wo'],
+                    'po' => $p['po'],
                     'color' => $p['color'],
                     'style' => $p['style'],
                     'size' => $p['size'],
                     'qty' => $p['qty'],
                     'box_capacity' => $p['box_capacity'],
-                    'total_box' => $p['total_box']
+                    'total_box' => $p['total_box'],
+                    'id_factory' => $this->id_factory
                 ];
                 array_push($dataPackingList, $data);
             }
@@ -1362,9 +1408,17 @@ class PackingModel extends CI_Model
             return $this->db->affected_rows();
         }
     }
+
     public function get_by_orc_packing_solid($orc)
     {
         $result = $this->db->get_where('solid_packing_list', array('orc' => $orc));
+
+        return $result->result_array();
+    }
+
+    public function get_by_wo_packing_solid($wo)
+    {
+        $result = $this->db->get_where('solid_packing_list', array('wo' => $wo));
 
         return $result->result_array();
     }
@@ -2426,5 +2480,26 @@ class PackingModel extends CI_Model
         $rst = $this->db->get_where('kapasitas_karton', ['style' => $style, 'size' => $size]);
         // echo($this->db->last_query());
         return $rst->result();
+    }
+
+    public function getSizesOnWorkOrderDetails($id){
+        $response = $this->db->get_where('work_order_details', ['id_work_order' => $id]);
+        return $response->result();
+    }
+
+    public function getStyleOnMasterOrderIcon($id){
+        $this->db->select('style_code');
+        $response = $this->db->get_where('master_order_icon_main', ['id_master_order_icon_main' => $id]);
+        return $response->result();
+    }
+
+    public function getPackingOrders(){
+        $response = $this->db->get_where('master_order_packing_main', ['id_factory' => $this->id_factory]);
+        return $response->result();
+    }
+
+    public function getPackingOrderDetail($id){
+        $response = $this->db->get_where('master_order_packing_details', ['id_master_order_packing_main' => $id]);
+        return $response->result();
     }
 }

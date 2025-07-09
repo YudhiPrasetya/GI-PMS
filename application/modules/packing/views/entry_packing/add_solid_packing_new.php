@@ -1,3 +1,39 @@
+<style>
+    .select2-result-row {
+        display: flex;
+        justify-content: space-between; /* Or other alignment */
+        padding: 5px;
+    }
+    .select2-result-column {
+        flex: 1; /* Distribute space equally */
+        padding: 0 5px;
+    }
+    .select2-result-column.column1 {
+        width: 5%; /* Example fixed width */
+    }
+    .select2-result-column.column2 {
+        width: 10%; /* Example fixed width */
+    }
+    .select2-result-column.column3 {
+        width: 10%; /* Example fixed width */
+    }
+    .select2-result-column.column4 {
+        width: 10%; /* Example fixed width */
+    }
+    .select2-result-column.column5 {
+        width: 10%; /* Example fixed width */
+    }
+    .select2-result-column.column6 {
+        width: 10%; /* Example fixed width */
+    }
+    .select2-result-column.column7 {
+        width: 10%; /* Example fixed width */
+    }
+    .select2-result-column.column8 {
+        width: 10%; /* Example fixed width */
+    }
+</style>
+
 <div class="page-wrapper">
     <div class="page-content">
         <div class="page-breadcrumb d-none d-sm-flex align-items-center mb-3">
@@ -7,87 +43,151 @@
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Entry Packing</li>
+                        <li class="breadcrumb-item active" aria-current="page">Input Packing</li>
                     </ol>
                 </nav>
             </div>
         </div>
-        <h6 class="mb-0 text-uppercase">Solid Packing List</h6>
+        <h6 class="mb-0 text-uppercase">Add Solid Packing</h6>
         <hr />
         <div class="row">
-            <div class="col-12 ">
+            <div class="col-12">
                 <div class="card rounded-4 w-100">
-                    <form id='frmPackingList' method="POST">
+                    <!-- <form id='frmPackingList' method="POST"> -->
                         <div class="card-body">
                             <div class="mx-3 my-3">
 
-                                <div class="row align-items-center mb-3">
+                                <!-- <div class="row mb-3">
                                     <div class="col-lg-1">
-                                        <!-- <label for="orc" class="col-form-label">ORC</label> -->
-                                        <label for="wo" class="col-form-label">Work Order</label>
+                                        <label for="wo" class="col-form-label"><b>Work Order:</b></label>
                                     </div>
-                                    <!-- <div class="col-lg-3">
-                                        <input type="text" id="orc" name="orc" class="form-control">
-                                    </div> -->
-                                    <div class="col-lg-3">
-                                        <input type="text" id="wo" name="wo" class="form-control">
+                                    <div class="col-lg-11">
+                                        <select id="wo" name="wo" class="form-control select2" placeholder="Select Work Order">
+                                        </select>
                                     </div>
-                                    <div class="col-lg-2">
-                                        <button type="button" class="btn btn-primary" id="btn_submit_orc">Submit</button>
+                                </div> -->
+
+                                <div class="row mb-4">
+                                    <div class="col-6">
+                                        <!-- <div class="row mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="wo" class="col-form-label"><b>Work Order:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" id="wo" name="wo" class="form-control form-control-sm" disabled>
+                                            </div>
+                                        </div> -->
+                                        <div class="row mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="wo" class="col-form-label"><b>Work Order:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control form-control-sm" id="wo" name="wo" disabled />
+                                                    <button class="btn btn-outline-secondary" id="btnSearchWO">Search WO</button>
+                                                </div>
+                                            </div>                                            
+                                        </div>
+
+                                        <div class="row mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="orc" class="col-form-label"><b>ORC:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" id="orc" name="orc" class="form-control form-control-sm" disabled>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row align-items-center mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="color" class="col-form-label"><b>Color:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" id="color" name="color" class="form-control form-control-sm" disabled>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row align-items-center mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="style" class="col-form-label"><b>Style:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" id="style" name="style" class="form-control form-control-sm" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-6">
+                                        <div class="row align-items-center mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="buyer" class="col-form-label"><b>Buyer:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" id="buyer" name="buyer" class="form-control form-control-sm" disabled>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row align-items-center mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="po" class="col-form-label"><b>No.PO:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" id="po" name="po" class="form-control form-control-sm" disabled>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row align-items-center mb-1">
+                                            <div class="col-lg-2">
+                                                <label for="qty_order" class="col-form-label"><b>Qty Order:</b></label>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <input type="text" id="qty_order" name="qty_order" class="form-control form-control-sm" disabled>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="row align-items-center mb-3">
+                                <div class="row mb-4">
+                                    <table id="solidPackingTable" class="table table-striped table-bordered table-sm" style="width:100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="15%">ID</th>
+                                                <th width="15%">Size</th>
+                                                <th width="25%">Qty Size Per Karton</th>
+                                                <th width="15%">Qty Order</th>
+                                                <th width="15%">Total Box</th>
+                                                <!-- <th width="25%">Action</th> -->
+                                            </tr>
+                                        </thead>
+                                        <tfoot>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <!-- <th></th> -->
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                                <div class="d-flex flex-row-reverse bd-highlight">
+                                    <div class="p-2 bd-gighlight">
+                                        <button type="button" class="btn btn-success btn-lg" id="btnUpdate" disabled>Save</button>
+                                    </div>
+                                    <div class="p-2 bd-highlight">
+                                        <a href="<?= site_url('packing/packing_solid_new'); ?>" class="btn btn-link">Back</a>
+                                    </div>
+                                </div>
+                                <!-- <div class="row align-items-center mb-3">
                                     <div class="col-lg-1">
-                                        <label for="color" class="col-form-label">Color</label>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <input type="text" id="color" name="color" class="form-control" disabled>
-                                    </div>
-                                </div>
-
-                                <div class="row align-items-center mb-5">
                                     <div class="col-lg-1">
-                                        <label for="style" class="col-form-label">Style</label>
                                     </div>
-                                    <div class="col-lg-3">
-                                        <input type="text" id="style" name="style" class="form-control" disabled>
-                                    </div>
-                                </div>
-
-                                <!-- <div class="table-responsive"> -->
-                                <table id="solidPackingTable" class="table table-striped table-bordered table-sm nowrap" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th width="15%">ID</th>
-                                            <th width="15%">Size</th>
-                                            <th width="25%">Qty Size Per Karton</th>
-                                            <th width="15%">Qty Order</th>
-                                            <th width="15%">Total Box</th>
-                                            <th width="25%">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                                <!-- </div> -->
-                                <div class="row align-items-center mb-3">
-                                    <div class="col-lg-3">
-                                        <a href="<?= site_url('packing/packing_solid'); ?>" class="btn btn-outline-secondary">Back</a>
-                                        <button type="button" class="btn btn-outline-primary" id="btnUpdate" disabled>Update</button>
-                                    </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
-                    </form>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
@@ -122,11 +222,56 @@
         </div>
     </div>
 </div>
+<!-- End Modal -->
+
+<!-- Modal -->
+<div class="modal fade" id="searchWOModal" >
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search Work Order On Master Order Packing</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="my-4">
+                    <div class="row">
+                        <table class="table table-striped table-hover table-bordered shadow cursor-pointer" width="100%" id="tableWO">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>IdMasterOrderPackingMain</th>
+                                    <th>IdMasterOrderIconMain</th>
+                                    <th>Buyer</th>
+                                    <th>ORC</th>
+                                    <th>Work Order</th>
+                                    <th>Style</th>
+                                    <th>Color</th>
+                                    <th>PO</th>
+                                    <th>QTY Order</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-lg" id="btnSelectWO">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Modal -->
+
+
 
 <script>
     $(document).ready(function() {
+        var idMasterOrderPackingMain = 0;
+        var idMasterOrderIconMain = 0;
+
         var table = $('#solidPackingTable').DataTable({
             // "dom": 'lfr<"toolbar">tip',
+            "destroy": true,
             "footerCallback": function(row, data, start, end, display) {
                 var api = this.api(),
                     data;
@@ -154,7 +299,7 @@
                 "style": "single"
             },
             "columnDefs": [{
-                "targets": [1, 2, 3, 4, 5],
+                "targets": [1, 2, 3, 4],
                 "className": "text-center align-middle"
             }, {
                 "targets": [0],
@@ -162,109 +307,23 @@
             }]
         });
 
-
-
-        $('#orc').keypress(function(e) {
-            if (e.keyCode == 13) {
-                var orcVal = $(this).val();
-
-                if (orcVal != "") {
-
-                    //cek di solid packing list
-                    //cek kapasitas karton
-                    $.ajax({
-                        type: "GET",
-                        url: "<?= site_url('packing/ajax_get_master_order_packing'); ?>/" + orcVal,
-                        dataType: 'json',
-                    }).done(function(dt) {
-                        console.log(dt);
-                        if (dt[0].carton_capacity == null) {
-                            swal.fire({
-                                icon: 'warning',
-                                title: 'Warning',
-                                html: 'Kapasitas karton belum diisi.',
-                                showConfirmButton: false,
-                                timer: 2500,
-                            })
-                        } else {
-                            //cek di solid packing list
-                            $.ajax({
-                                type: 'GET',
-                                url: '<?= site_url("packing/ajax_check_solid_packing_list_by_orc"); ?>/' + orcVal,
-                                dataType: 'json',
-                            }).done(function(rowCount) {
-                                if (rowCount > 0) {
-                                    swal.fire({
-                                        icon: 'warning',
-                                        title: 'Warning',
-                                        html: 'ORC sudah diinput.',
-                                        showConfirmButton: false,
-                                        timer: 2500
-                                    }).then(function() {
-                                        $('#orc').val('');
-                                        $('#orc').trigger('focus')
-                                    })
-                                } else {
-                                    $.ajax({
-                                        type: "GET",
-                                        url: "<?= site_url('packing/ajax_get_master_order_packing'); ?>/" + orcVal,
-                                        dataType: 'json',
-                                    }).done(function(dt) {
-                                        if (dt.length == 0) {
-                                            swal.fire({
-                                                icon: 'warning',
-                                                title: 'Warning',
-                                                html: 'ORC tidak ditemukan.',
-                                                showConfirmButton: false,
-                                                timer: 2500,
-                                            }).then(function() {
-                                                $('#orc').val('');
-                                                $('#orc').trigger('focus')
-                                            })
-                                        } else {
-                                            $('#btnUpdate').prop('disabled', false);
-
-                                            $('#color').val(dt[0].color);
-                                            $('#style').val(dt[0].style);
-                                            $.ajax({
-                                                type: 'POST',
-                                                url: "<?= site_url('packing/ajax_get_master_order_packing'); ?>/" + orcVal,
-                                                // data: {
-                                                //     'style': $('#style').val()
-                                                // },
-                                                dataType: 'json'
-                                            }).done(function(rows) {
-                                                if (rows != null) {
-                                                    $.each(rows, function(i, item) {
-                                                        table.row.add([
-                                                            0,
-                                                            item.size,
-                                                            item.carton_capacity,
-                                                            0, 0,
-                                                            '<button type="button" class="btn btn-outline-info btn-sm btnEditQty"><i class="bx bx-edit-alt"></i> Edit pcs</button>'
-                                                        ]).draw();
-                                                    })
-                                                }
-                                            })
-
-                                        }
-                                    });
-                                }
-                            })
-                        }
-                    });
-
-                } else {
-                    swal.fire({
-                        icon: 'warning',
-                        title: 'Warning',
-                        html: 'Silahkan input ORC.',
-                        showConfirmButton: false,
-                        timer: 2000
-                    })
-                }
-            }
+        var tableWO = $('#tableWO').DataTable({
+            destroy: true,
+            select: {
+                style: 'single'
+            },
+            columnDefs:[
+                {
+                    targets: 1,
+                    visible: false
+                },
+                {
+                    targets: 2,
+                    visible: false
+                },
+            ]
         });
+
 
         $('#btn_submit_orc').click(function() {
 
@@ -398,15 +457,20 @@
 
             let rows = table.rows().data();
             let orc = $('#orc').val();
+            let wo = $('#wo').val();
             let style = $('#style').val();
             let color = $('#color').val();
+            let po = $('#po').val();
 
             let arrPackingList = [];
             $.each(rows, function(i, item) {
                 if (parseInt(item[3]) != 0) {
                     let objPackingList = {
                         // "id_packing_list": item[0],
+                        "id_master_order_icon_main": idMasterOrderIconMain,
                         "orc": orc,
+                        "wo": wo,
+                        "po": po,
                         "color": color,
                         "style": style,
                         "size": item[1],
@@ -430,7 +494,7 @@
                 if (rst > 0) {
                     $.ajax({
                         type: 'GET',
-                        url: '<?= site_url("packing/ajax_get_packing_orc"); ?>/' + $('#orc').val(),
+                        url: '<?= site_url("packing/ajax_get_packing_wo"); ?>/' + wo,
                         dataType: 'json'
                     }).done(function(retData) {
                         if (retData != null) {
@@ -446,7 +510,8 @@
                                         "id_packing_list": item.id_packing_list,
                                         "no_box": noBox,
                                         "qty": (x == item.total_box && sisa > 0 ? sisa : parseInt(item.box_capacity)),
-                                        "barcode": item.orc + "-" + zero.repeat(4 - noBox.toString().length) + noBox.toString()
+                                        "barcode": item.wo + "-" + zero.repeat(4 - noBox.toString().length) + noBox.toString()
+                                        // "barcode": item.orc + "-" + zero.repeat(4 - noBox.toString().length) + noBox.toString()
                                     }
                                     arrSolidPackingBarcode.push(objSolidPackingBarcode);
                                 }
@@ -465,16 +530,19 @@
                                         icon: 'success',
                                         title: 'Success',
                                         html: 'Data solid packing list berhasil diupdate.',
-                                        showConfirmButton: false,
-                                        timer: 2500
+                                        showConfirmButton: true,
                                     }).then(function() {
                                         table.clear().draw();
                                         $('#orc').val('');
+                                        $('#wo').val('');
                                         $('#color').val('');
                                         $('#style').val('');
-                                        $('#orc').focus();
+                                        $('#buyer').val('');
+                                        $('#po').val('');
+                                        $('#qty_order').val('');
 
-                                        // $('#btnUpdate').prop('disabled', false);
+                                        table.clear().draw();
+                                        $('#btnUpdate').prop('disabled', true);
                                     })
                                 }
                             });
@@ -487,6 +555,86 @@
 
 
         });
+
+        $('#btnSearchWO').click(function(){
+            $('#searchWOModal').modal('show');
+        });
+
+        $('#searchWOModal').on('shown.modal.bs', function(){
+            loadWO();
+            function loadWO(){
+                $.ajax({
+                    type: 'GET',
+                    url: '<?= site_url("packing/ajax_getPackingOrders"); ?>',
+                    dataType: 'JSON',
+                    success: function(response){
+                        let result = response.data;
+                        for(let x = 0; x < result.length; x++){
+                            tableWO.row.add([
+                                x+1,
+                                result[x].id,
+                                result[x].id_master_order_icon_main,
+                                result[x].buyer,
+                                result[x].orc,
+                                result[x].wo,
+                                result[x].style,
+                                result[x].color,
+                                result[x].no_po,
+                                result[x].qty_order,
+                            ]).draw()
+                        }
+                    }
+                })
+            }
+        });
+
+        $('#searchWOModal').on('hidden.modal.bs', function(){
+            tableWO.clear().draw();
+        });
+
+        $('#btnSelectWO').click(function(){
+            let selectedRow = tableWO.row('.selected').data();
+            console.log('selectedRow: ', selectedRow);
+            idMasterOrderPackingMain = parseInt(selectedRow[1]);
+            idMasterOrderIconMain = parseInt(selectedRow[2]);
+
+            $('#buyer').val(selectedRow[3]);
+            $('#orc').val(selectedRow[4])
+            $('#wo').val(selectedRow[5]);
+            $('#style').val(selectedRow[6]);
+            $('#color').val(selectedRow[7]);
+            $('#po').val(selectedRow[8]);
+            $('#qty_order').val(selectedRow[9]);
+
+
+            $('#searchWOModal').modal('hide');
+
+            loadSolidPackingTable(idMasterOrderPackingMain);
+        });
+
+        function loadSolidPackingTable(id){
+            console.log('id: ', id);
+            $.ajax({
+                type: 'GET',
+                url: '<?= site_url("Packing/ajax_getPackingOrderDetail"); ?>/' + id,
+                dataType: 'JSON',
+                success: function(result){
+                    let data = result.data;
+                    table.clear().draw();
+                    for(let x = 0; x < data.length; x++){
+                        table.row.add([
+                            0,
+                            data[x].size,
+                            parseInt(data[x].carton_capacity),
+                            parseInt(data[x].qty),
+                            Math.ceil(parseInt(data[x].qty)/parseInt(data[x].carton_capacity)),
+                            // '<button type="button" class="btn btn-outline-info btn-sm btnEditQty"><i class="bx bx-edit-alt"></i> Edit pcs</button>'
+                        ]).draw();
+                    }
+                    $('#btnUpdate').prop('disabled', false);
+                }
+            })
+        }
 
 
     });

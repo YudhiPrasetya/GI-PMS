@@ -476,6 +476,11 @@ class Packing extends MY_Controller
   echo json_encode($result);
  }
 
+ public function ajax_getMasterOrderPackingDetailById($id){
+  $rst['data'] = $this->PackingModel->getMasterOrderPackingDetailById($id);
+  echo json_encode($rst);
+ }
+
  public function postMasterOrderPacking()
  {
   date_default_timezone_set("Asia/Jakarta");
@@ -518,6 +523,47 @@ class Packing extends MY_Controller
   $this->PackingModel->postDataMasterOrderPackingDetails($data_details);
   echo json_encode($data_details);
  }
+
+ public function ajax_PostMasterOrderPacking()
+ {
+  date_default_timezone_set("Asia/Jakarta");
+  $dtMain = $this->input->post('dataMain');
+  $dtDetail = $this->input->post('dataDetail');
+
+  $data_main = array(
+    'id_master_order_icon_main' => $dtMain['id_master_order_icon_main'],
+    'wo' => $dtMain['wo'],
+    'created_date' => date("Y-m-d H:i:s"),
+    'orc' => $dtMain['orc'],
+    'style' => $dtMain['style'],
+    'color' => $dtMain['color'],
+    'buyer' => $dtMain['buyer'],
+    'no_po' => $dtMain['no_po'],
+    'qty_order' => $dtMain['qty_order'],
+    'id_factory' => $this->session->userdata('id_factory'),
+  );
+  $id = $this->PackingModel->postDataMasterOrderPackingMain($data_main);
+
+  $data_details = [];
+  foreach ($dtDetail as $d) {
+    $detail= [
+      'id_master_order_packing_main' => $id,
+      'size' => $d['size'],
+      'carton_capacity' => $d['carton_capacity'],
+      'qty' => $d['qty']
+    ];
+    array_push($data_details, $detail);
+  }
+
+  $this->PackingModel->postDataMasterOrderPackingDetails($data_details);
+  echo json_encode($data_details);
+ }
+
+ public function ajax_getMasterOrderPackingdetails(){
+  $result['data'] = $this->PackingModel->getMasterOrderPackingdetails();
+  echo json_encode($result); 
+ }
+
  // ==================================================================================================
 
 
@@ -613,17 +659,151 @@ class Packing extends MY_Controller
  public function ajax_get_solid_packing_detail()
  {
   $style = $this->input->post('style');
-  $orc = $this->input->post('orc');
-  $rst['data'] = $this->PackingModel->get_solid_packing_detail($style, $orc);
+  // $orc = $this->input->post('orc');
+  $wo = $this->input->post('wo');
+  // $rst['data'] = $this->PackingModel->get_solid_packing_detail($style, $orc);
+  $rst['data'] = $this->PackingModel->get_solid_packing_detail($style, $wo);
   echo json_encode($rst);
  }
 
- public function ajax_barcode_print_preview($orc)
+//  public function ajax_barcode_print_preview($orc)
+//  {
+
+//   $result = $this->PackingModel->get_by_orc($orc);
+
+//   $this->_print_barcode_packing2($orc, $result);
+//  }
+
+ public function ajax_barcode_print_preview($wo)
  {
 
-  $result = $this->PackingModel->get_by_orc($orc);
+  $result = $this->PackingModel->get_by_wo($wo);
 
-  $this->_print_barcode_packing2($orc, $result);
+  $this->_print_barcode_packing_wo($wo, $result);
+ }
+
+ private function _print_barcode_packing_wo($orc, $rst)
+ {
+  $this->load->library('Pdf');
+
+  $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+  // $pdf = new Pdf(PDF_PAGE_ORIENTATION, PDF_UNIT, array('156','205'), true, 'UTF-8', false);
+
+  $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+  $pdf->setPrintHeader(false);
+  $pdf->setPrintFooter(false);
+
+  $pdf->SetMargins(3, 20, 2);
+  $width = 216;
+  $height = 330;
+
+  $pageRes = array($width, $height);
+
+  $pdf->AddPage('P', $pageRes);
+  $barcodeStyle = array(
+   'position' => '',
+   'align' => 'C',
+   'stretch' => true,
+   'fitwidth' => false,
+   'cellfitalign' => '',
+   'border' => false,
+   'hpadding' => 'auto',
+   'vpadding' => 'auto',
+   'fgcolor' => array(0, 0, 0),
+   'bgcolor' => false,
+   'text' => false,
+   'font' => 'helvetica',
+   'fontsize' => 6,
+   'stretchtext' => ''
+  );
+
+  $counterCols = 1;
+  $counterRows = 1;
+
+  $labelCols = 3;
+  $labelRows = 10;
+  $labelWidth = 70;
+  $labelWidthBaseMargin = 1;
+  // $labelHeight = 15;
+  $labelHeight = 12;
+  $labelHeightBaseMargin = 20;
+  $labelHeightMargin = $labelHeight - 7.5;
+
+  $x = $pdf->GetX();
+  $y = $pdf->GetY();
+  $totBox = 0;
+
+  for ($i = 0; $i <= count($rst) - 1; $i++) {
+   if ($y >= 300) {
+    $pdf->AddPage('P', $pageRes);
+    $y = $pdf->GetY();
+   }
+
+   $styleArr = explode(" ", $rst[$i]->style);
+
+   if (count($styleArr) > 1) {
+    $style = $styleArr[0] . " " . $styleArr[1] . "...";
+    $pdf->SetFont('Helvetica', 'B', 10);
+   } else {
+    $style = $rst[$i]->style;
+    $pdf->SetFont('Helvetica', 'B', 12);
+   }
+
+   $colorArr = explode(" ", $rst[$i]->color);
+   if (count($colorArr) > 1) {
+    $color = $colorArr[0] . " " . $colorArr[1] . '...';
+    $pdf->SetFont('Helvetica', 'B', 10);
+   } else {
+    $color = $rst[$i]->color;
+    $pdf->SetFont('Helvetica', 'B', 12);
+   }
+
+   //barcode
+   $pdf->SetFont('Helvetica', 'B', 11);
+   $pdf->write1DBarcode($rst[$i]->barcode, 'C128', $x, $y - 3, $labelWidth, $labelHeight, 0.4, $barcodeStyle, 'L');
+
+   //style, color
+   $pdf->SetXY($x + 1, $y + $labelHeight - 3);
+   $pdf->Cell(
+    $labelWidth,
+    5,
+    $style . "  " . $color,
+    0,
+    0,
+    'L',
+    FALSE,
+    '',
+    0,
+    FALSE,
+    'C',
+    'B'
+   );
+
+   //orc, size, qty, box capacity
+   $pdf->SetXY($x + 1, $y + $labelHeight);
+   $pdf->SetFont('Helvetica', 'B', 11);
+   $pdf->Cell($labelWidth, 7, $orc . "  " . $rst[$i]->size . " " . $rst[$i]->qty . " " . $rst[$i]->pcs . " ", 0, 0, 'L', FALSE, '', 0, FALSE, 'C', 'B');
+
+   //nmr box
+   $pdf->SetXY($x, $y + $labelHeight);
+
+   $pdf->SetFont('Helvetica', 'B', 11);
+   $pdf->Cell($labelWidth, 7, str_repeat("0", 4 - (strlen(strval($rst[$i]->no_box)))) . strval($rst[$i]->no_box), 0, 0, 'R', FALSE, '', 0, FALSE, 'C', 'B');
+
+   $x = $x + $labelWidth + $labelWidthBaseMargin;
+   if ($counterCols == $labelCols) {
+    $pdf->ln($labelHeight);
+    $counterCols = 1;
+    $x = $pdf->GetX();
+    $y = $y + $labelHeightMargin + $labelHeightBaseMargin;
+   } else {
+    $counterCols++;
+   }
+  }
+
+  ob_end_clean();
+  $pdf->Output('packingBarcodes.pdf', 'I');
  }
 
  private function _print_barcode_packing2($orc, $rst)
@@ -750,9 +930,17 @@ class Packing extends MY_Controller
   $pdf->Output('packingBarcodes.pdf', 'I');
  }
 
- public function ajax_packing_list_print_preview($orc)
+//  public function ajax_packing_list_print_preview($orc)
+//  {
+//   $data['packingList'] = $this->PackingModel->get_by_orc_list($orc);;
+
+//   $this->load->view('packing/entry_packing/print_packing_list_view', $data);
+//  }
+
+ public function ajax_packing_list_print_preview($wo)
  {
-  $data['packingList'] = $this->PackingModel->get_by_orc_list($orc);;
+  // $data['packingList'] = $this->PackingModel->get_by_orc_list($orc);;
+  $data['packingList'] = $this->PackingModel->get_by_wo_list($wo);
 
   $this->load->view('packing/entry_packing/print_packing_list_view', $data);
  }
@@ -777,6 +965,24 @@ class Packing extends MY_Controller
    $delete = $this->PackingModel->delete($ids);
    if ($delete) {
     $del = $this->PackingModel->delete_by_orc($orc);
+
+    echo json_encode($del);
+   }
+  }
+ }
+
+ public function ajax_delete_packing_list_by_wo($wo)
+ {
+  $rst = $this->PackingModel->get_by_wo_list($wo);
+  $ids = [];
+  if ($rst != null) {
+   foreach ($rst as $r) {
+    array_push($ids, $r['id_packing_list']);
+   }
+   $this->load->model('PackingModel');
+   $delete = $this->PackingModel->delete($ids);
+   if ($delete) {
+    $del = $this->PackingModel->delete_by_wo($wo);
 
     echo json_encode($del);
    }
@@ -820,6 +1026,15 @@ class Packing extends MY_Controller
 
   echo json_encode($rst);
  }
+
+ public function ajax_get_packing_wo($wo)
+ {
+
+  $rst = $this->PackingModel->get_by_wo_packing_solid($wo);
+
+  echo json_encode($rst);
+ }
+
  public function ajax_insert_solid_packing_barcode_batch()
  {
 
@@ -1880,6 +2095,26 @@ class Packing extends MY_Controller
 
     $rst['data'] = $this->PackingModel->getKapasitasKarton($style, $size);
     echo json_encode($rst);
-  }  
+  }
+  
+  public function ajax_getSizesOnWorkOrderDetails($id){
+    $rst['data'] = $this->PackingModel->getSizesOnWorkOrderDetails($id);
+    echo json_encode($rst);
+  }
+
+  public function ajax_getStyleOnMasterOrderIcon($id){
+    $rst['data'] = $this->PackingModel->getStyleOnMasterOrderIcon($id);
+    echo json_encode($rst);
+  }
+
+  public function ajax_getPackingOrders(){
+    $rst['data'] = $this->PackingModel->getPackingOrders();
+    echo json_encode($rst);
+  }
+
+  public function ajax_getPackingOrderDetail($id){
+    $rst['data'] = $this->PackingModel->getPackingOrderDetail($id);
+    echo json_encode($rst);
+  }
 
 }

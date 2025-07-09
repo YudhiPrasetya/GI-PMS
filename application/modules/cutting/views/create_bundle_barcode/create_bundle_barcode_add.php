@@ -438,10 +438,13 @@
      text: "- Select size -"
     }));
     $.each(data, function(i, item) {
-     $('#size').append($('<option>', {
-      value: item.size,
-      text: item.size
-     }));
+      console.log('item: ', item);
+      if(parseInt(item.qty_size) > 0){
+        $('#size').append($('<option>', {
+         value: item.size,
+         text: item.size
+        }));
+      }
     });
    });
   }
